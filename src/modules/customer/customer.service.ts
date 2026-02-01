@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../generated/prisma/browser";
 import { prisma } from "../../lib/prisma";
 
 // ===== PROFILE =====
@@ -160,6 +161,29 @@ const getReviewsForMedicine = async (medicineId: string) => {
   });
 };
 
+const cancelOrder = async (userId: string, orderId: string) => {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId, userId },
+    include: { items: true },
+  });
+
+  if (!order) throw new Error("Order not found");
+  if (order.status !== OrderStatus.PLACED) throw new Error("Order already cancelled ");
+
+  // Stock rollback
+  for (const item of order.items) {
+    await prisma.medicine.update({
+      where: { id: item.medicineId },
+      data: { stock: { increment: item.quantity } },
+    });
+  }
+
+  return prisma.order.update({
+    where: { id: orderId },
+    data: { status: OrderStatus.CANCELLED },
+  });
+};
+
 
 // ===== EXPORT =====
 export const CustomerService = {
@@ -170,4 +194,5 @@ export const CustomerService = {
   createOrder,
   addReview,
   getReviewsForMedicine,
+  cancelOrder 
 };

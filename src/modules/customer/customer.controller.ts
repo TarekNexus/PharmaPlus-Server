@@ -95,6 +95,19 @@ const getReviewsForMedicine = async (req: Request, res: Response) => {
   }
 };
 
+// customer.controller.ts
+const cancelOrder = async (req: Request, res: Response) => {
+  try {
+    const order = await CustomerService.cancelOrder(req.user!.id, req.params.id as string);
+    res.status(200).json({
+      success: true,
+      message: "Order cancelled successfully",
+      data: order,
+    });
+  } catch (error: any) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
 
 // ===== EXPORT =====
 export const CustomerController = {
@@ -105,4 +118,5 @@ export const CustomerController = {
   createOrder,
   addReview,
   getReviewsForMedicine,
+  cancelOrder 
 };

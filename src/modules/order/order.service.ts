@@ -24,41 +24,55 @@ const getOrders = async (sellerId: string) => {
 };
 
 // Update order status
-const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
-  // 1️⃣ Fetch order first
+const updateOrderStatus = async (
+  orderId: string,
+  status: OrderStatus,
+  user: { id: string; role: string }
+) => {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
   });
 
   if (!order) throw new Error("Order not found");
 
-  // 2️⃣ Optional: Prevent status regression
-  const statusOrder = [
-    OrderStatus.PLACED,
-    OrderStatus.PROCESSING,
-    OrderStatus.SHIPPED,
-    OrderStatus.DELIVERED,
-    OrderStatus.CANCELLED,
-  ];
-  const currentIndex = statusOrder.indexOf(order.status);
-  const newIndex = statusOrder.indexOf(status);
+  // 🔐 CUSTOMER RULES
+  if (user.role === "CUSTOMER") {
+    if (order.userId !== user.id) {
+      throw new Error("You can cancel only your own order");
+    }
 
-  if (order.status === OrderStatus.DELIVERED || order.status === OrderStatus.CANCELLED) {
-    throw new Error(`Cannot update order after it is ${order.status}`);
+    if (status !== OrderStatus.CANCELLED) {
+      throw new Error("Customer can only cancel order");
+    }
+
+    if (order.status !== OrderStatus.PLACED) {
+      throw new Error("Order cannot be cancelled now");
+    }
   }
 
-  if (newIndex < currentIndex) {
-    throw new Error(`Cannot revert order status from ${order.status} to ${status}`);
+  // 🔐 SELLER RULES
+  if (user.role === "SELLER") {
+    if (status === OrderStatus.CANCELLED) {
+      throw new Error("Seller cannot cancel order");
+    }
   }
 
-  // 3️⃣ Update status
-  const updatedOrder = await prisma.order.update({
+  // 🔐 COMMON RULES
+  if (
+    order.status === OrderStatus.DELIVERED ||
+    order.status === OrderStatus.CANCELLED
+  ) {
+    throw new Error(`Order already ${order.status}`);
+  }
+
+  return prisma.order.update({
     where: { id: orderId },
     data: { status },
-    include: { items: { include: { medicine: true } }, user: true },
+    include: {
+      items: { include: { medicine: true } },
+      user: true,
+    },
   });
-
-  return updatedOrder;
 };
 
 

@@ -28,15 +28,46 @@ const getAllOrders = () =>
     orderBy: { createdAt: "desc" },
   });
 
-// ===== CATEGORIES =====
 const getAllCategories = () => prisma.category.findMany();
+
 const addCategory = (data: any) => prisma.category.create({ data });
+
 const updateCategory = (categoryId: string, data: any) =>
   prisma.category.update({ where: { id: categoryId }, data });
-const deleteCategory = (categoryId: string) =>
-  prisma.category.delete({ where: { id: categoryId } });
 
-// ===== EXPORT =====
+const deleteCategory = async (id: string) => {
+ 
+  const category = await prisma.category.findUnique({
+    where: { id },
+  });
+
+  if (!category) {
+    throw new Error("CATEGORY_NOT_FOUND");
+  }
+
+
+  return await prisma.category.delete({
+    where: { id },
+  });
+};
+
+const toggleUserBan = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    throw new Error("USER_NOT_FOUND");
+  }
+
+  return await prisma.user.update({
+    where: { id },
+    data: {
+      isBanned: !user.isBanned, // 🔄 toggle
+    },
+  });
+};
+
 export const AdminService = {
   getAllUsers,
   updateUserRole,
@@ -46,5 +77,6 @@ export const AdminService = {
   addCategory,
   updateCategory,
   deleteCategory,
-  getUserById
+  getUserById,
+   toggleUserBan,
 };
