@@ -26,12 +26,7 @@ const addMedicine = async (sellerId: string, data: any) => {
             name: true,
           },
         },
-        seller: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+       
       },
     });
 
