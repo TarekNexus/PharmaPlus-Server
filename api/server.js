@@ -810,7 +810,19 @@ var getMedicinesByCategory = async (categoryId) => {
   if (!category) return [];
   return prisma.medicine.findMany({
     where: { categoryId },
-    select: { id: true, name: true, price: true, stock: true, description: true, image: true, sellerId: true, categoryId: true },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      stock: true,
+      description: true,
+      image: true,
+      sellerId: true,
+      categoryId: true,
+      category: {
+        select: { name: true }
+      }
+    },
     orderBy: { createdAt: "desc" }
   });
 };

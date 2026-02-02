@@ -17,12 +17,26 @@ const getAllCategories = () =>
   prisma.category.findMany({ orderBy: { createdAt: "desc" } });
 
 const getMedicinesByCategory = async (categoryId: string) => {
+
   const category = await prisma.category.findUnique({ where: { id: categoryId } });
   if (!category) return [];
 
+  // Fetch medicines with category name
   return prisma.medicine.findMany({
     where: { categoryId },
-    select: { id: true, name: true, price: true, stock: true, description: true, image: true, sellerId: true, categoryId: true },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      stock: true,
+      description: true,
+      image: true,
+      sellerId: true,
+      categoryId: true,     
+      category: {           
+        select: { name: true } 
+      }
+    },
     orderBy: { createdAt: "desc" },
   });
 };
