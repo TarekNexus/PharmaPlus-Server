@@ -18,7 +18,7 @@ router.get("/orders", auth(UserRole.ADMIN), AdminController.getAllOrders);
 
 router.get(
   "/categories",
-  auth(UserRole.ADMIN,UserRole.SELLER),
+  auth(UserRole.ADMIN),
   AdminController.getAllCategories,
 );
 router.post("/categories", auth(UserRole.ADMIN), AdminController.addCategory);
