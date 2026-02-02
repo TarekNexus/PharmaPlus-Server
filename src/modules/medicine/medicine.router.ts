@@ -6,9 +6,10 @@ const router = Router();
 
 
 router.get("/", MedicineController.getAllMedicines);
+router.get("/getMedicinesByCategory/:id", MedicineController.getMedicinesByCategory);
 router.get("/:id", MedicineController.getMedicineById);
 router.get("/categories/all", MedicineController.getAllCategories);
-router.get("/medicinesCategory/:categoryId", MedicineController.getMedicinesByCategory);
+
 
 
 
