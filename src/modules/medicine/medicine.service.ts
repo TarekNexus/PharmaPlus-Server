@@ -15,12 +15,31 @@ const getMedicineById = (id: string) =>
 
 const getAllCategories = () =>
   prisma.category.findMany({ orderBy: { createdAt: "desc" } });
+const getMedicinesByCategory = async (categoryId: string) => {
+  
+  const category = await prisma.category.findUnique({ where: { id: categoryId } });
+  if (!category) return []; 
 
+  return prisma.medicine.findMany({
+    where: { categoryId },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      stock: true,
+      description: true,
+      image: true,
+      sellerId: true,
+      categoryId: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};
 
 
 export const MedicineService = {
   getAllMedicines,
   getMedicineById,
   getAllCategories,
-
+  getMedicinesByCategory,
 };

@@ -8,7 +8,7 @@ const router = Router();
 router.get("/", MedicineController.getAllMedicines);
 router.get("/:id", MedicineController.getMedicineById);
 router.get("/categories/all", MedicineController.getAllCategories);
-
+router.get("/categories/:categoryId", MedicineController.getMedicinesByCategory);
 
 
 

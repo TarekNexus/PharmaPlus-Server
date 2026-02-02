@@ -67,11 +67,30 @@ const getAllCategories = async (_req: Request, res: Response) => {
   }
 };
 
+const getMedicinesByCategory = async (req: Request, res: Response) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const medicines = await MedicineService.getMedicinesByCategory(categoryId as string);
 
+    res.status(200).json({
+      success: true,
+      message: `Medicines for category fetched successfully`,
+      data: medicines,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch medicines by category",
+      error: error.message || error,
+    });
+  }
+};
 
 // ===== EXPORT OBJECT =====
 export const MedicineController = {
   getAllMedicines,
   getMedicineById,
+  getMedicinesByCategory,
   getAllCategories,
 };
