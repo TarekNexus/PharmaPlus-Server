@@ -16,4 +16,5 @@ router.get("/medicinesCategory/:categoryId", MedicineController.getMedicinesByCa
 
 
 
+
 export const medicineRouter: Router = router;
