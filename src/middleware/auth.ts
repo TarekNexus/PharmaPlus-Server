@@ -52,10 +52,9 @@ const auth = (...allowedRoles: UserRole[]) => {
       };
 
       // 4️⃣ Block banned users
-      if (dbUser.isBanned) {
-        return res.status(403).json({ success: false, message: "Your account has been banned" });
-      }
-
+  if (dbUser.isBanned && dbUser.role !== UserRole.ADMIN) {
+  return res.status(403).json({ success: false, message: "Your account has been banned" });
+}
       // 5️⃣ Role-based access control
       if (allowedRoles.length > 0 && !allowedRoles.includes(dbUser.role as UserRole)) {
         return res.status(403).json({ success: false, message: "Forbidden: insufficient permissions" });

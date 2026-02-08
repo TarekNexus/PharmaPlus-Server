@@ -70,6 +70,19 @@ const getMedicinesByCategory = async (categoryId: string) => {
   };
 };
 
+const updateMedicine = async (medicineId: string, data: any) => {
+  try {
+    const updated = await prisma.medicine.update({
+      where: { id: medicineId }, // only by id
+      data,
+    });
+    return updated;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 
 export const MedicineService = {
@@ -77,4 +90,5 @@ export const MedicineService = {
   getMedicineById,
   getAllCategories,
   getMedicinesByCategory,
+  updateMedicine
 };

@@ -5,23 +5,14 @@ import { prisma } from "../../lib/prisma";
 
 // Get all orders for the seller's medicines
 const getOrders = async (sellerId: string) => {
-  return prisma.order.findMany({
-    where: {
-      items: {
-        some: {
-          medicine: {
-            sellerId,
-          },
-        },
-      },
-    },
-    include: {
-      
-      items: { include: { medicine: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+return prisma.order.findMany({
+  include: {
+    items: { include: { medicine: true } },
+  },
+  orderBy: { createdAt: "desc" },
+});
 };
+
 
 // Update order status
 const updateOrderStatus = async (

@@ -84,6 +84,27 @@ const getMedicinesByCategory = async (req: Request, res: Response) => {
     });
   }
 };
+const updateMedicine = async (req: Request, res: Response) => {
+  try {
+    const medicine = await MedicineService.updateMedicine(
+      req.params.id as string, // just medicineId
+      req.body
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Medicine updated successfully",
+      data: medicine,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to update medicine",
+      error: error.message || error,
+    });
+  }
+};
 
 
 // ===== EXPORT OBJECT =====
@@ -92,4 +113,5 @@ export const MedicineController = {
   getMedicineById,
   getMedicinesByCategory,
   getAllCategories,
+  updateMedicine
 };
