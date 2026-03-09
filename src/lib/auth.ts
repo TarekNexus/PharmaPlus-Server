@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { prisma } from "./prisma";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import "dotenv/config";
+import { oAuthProxy } from "better-auth/plugins";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql", 
@@ -44,4 +45,7 @@ advanced: {
       },
     },
   },
+  plugins: [
+    
+      oAuthProxy()]
 });

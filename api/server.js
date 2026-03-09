@@ -82,6 +82,7 @@ var prisma = new PrismaClient({ adapter });
 // src/lib/auth.ts
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import "dotenv/config";
+import { oAuthProxy } from "better-auth/plugins";
 var auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql"
@@ -121,7 +122,10 @@ var auth = betterAuth({
         }
       }
     }
-  }
+  },
+  plugins: [
+    oAuthProxy()
+  ]
 });
 
 // src/app.ts
