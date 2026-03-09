@@ -30,6 +30,7 @@ secret: process.env.BETTER_AUTH_SECRET!,
       accessType: "offline",
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
       account: {
         skipStateCookieCheck: true
       }

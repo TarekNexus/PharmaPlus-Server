@@ -108,6 +108,7 @@ var auth = betterAuth({
       accessType: "offline",
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
       account: {
         skipStateCookieCheck: true
       }
